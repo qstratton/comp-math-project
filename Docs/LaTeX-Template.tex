@@ -111,4 +111,91 @@
 
 \section{Introduction}
 
+\section{Theory}
+\begin{thm}
+If $A$ is a tridiagonal matrix. Then R in the the product $A=QR$ is a upper triangular matrix with non zero entries only in the diagonal and the two super diagonals.
+\end{thm}
+\[A=\begin{pmatrix}
+a_{11} & a_{12} &  &   \\ 
+a_{21} & a_{22} & a_{23} &    \\ 
+ & \ddots & \ddots & \ddots   \\ 
+   &  & a_{m m-1} & a_{mm}
+\end{pmatrix}~,~R=\begin{pmatrix}
+r_{11} & r_{12} & r_{13} &  \\ 
+ & \ddots & \ddots & \ddots \\ 
+ &  & \ddots & \ddots \\ 
+ &  &  & r_{mm}
+\end{pmatrix}  \]
+\begin{proof}
+To prove the statement we will use the classical Gram-Schmidt method for the QR decomposition.\\
+Step 1: we want to show that $q_j$ has the form $q_j=\begin{pmatrix}
+* \\ 
+\vdots \\ 
+* \\ 
+0 \\ 
+\vdots
+\end{pmatrix} \leftarrow j+1\text{-th entry}$.\\
+We prove this by induction:
+\begin{description}
+\item[Base step] $j=1$ the if we assume that $\|a_1\|=1$ then $q_1=a_1$ thus
+\[q_1= \begin{pmatrix}
+a_{11} \\ 
+a_{21} \\ 
+0 \\  
+\vdots
+\end{pmatrix}\]
+\item[Induction step] Assume that the statement holds for $j-1$. Then
+\[v_j=a_j-\sum_{k=1}^{j-1} (q_k^* a_j)q_k~\text{ and } q_j= v_j/\|v\|_j\]
+and by using the form of $q_{j-1}$ we obtain
+\[q_j= \begin{pmatrix}
+0\\ 
+\vdots \\ 
+a_{j-1, j} \\ 
+a_{jj} \\ 
+a_{j+1,j} \\
+0\\
+\vdots
+\end{pmatrix}-\sum_{k=1}^{j-1} \begin{pmatrix}
+*\\ 
+\vdots \\ 
+\vdots \\ 
+* \\ 
+0 \\
+\vdots\\
+\vdots
+\end{pmatrix}\leftarrow k+1\text{-th entry}= \begin{pmatrix}
+*\\ 
+\vdots \\ 
+\vdots \\ 
+* \\ 
+0 \\
+\vdots\\
+\vdots
+\end{pmatrix}\leftarrow j+1\text{-th entry} \]
+\end{description}
+Step 2: Compute $r_{ij}$ in the CGS method\\
+For $j=1$ to $n$ and for $i=1$ to $j-1$: $r_{ij}= q_i^*a_j$.
+Then by step 1 we obtain that $r_{ij}=0$ if $i\leq j-3$ since then by the form of the vectors $q_{j-3}$ and $a_j$
+\[0=\begin{pmatrix}
+* \\ 
+\vdots  \\ 
+* \\ 
+0 \\ 
+\vdots \\
+\vdots \\
+\vdots \\ 
+0
+\end{pmatrix}^*\begin{pmatrix}
+0 \\ 
+\vdots  \\ 
+0 \\ 
+* \\ 
+* \\ 
+*\\
+0\\
+\vdots\\
+0
+\end{pmatrix} \leftarrow j\text{-th enttry} \]
+The above argument holds for all $i\leq j-3$. 
+\end{proof}
 \end{document}
