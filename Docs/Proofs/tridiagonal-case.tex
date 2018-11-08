@@ -5,6 +5,8 @@
 \usepackage{graphicx}
 \usepackage{verbatim}
 \usepackage{fancyhdr}
+\usepackage{subfigure}
+\usepackage{float}
 % Code
 \usepackage{listings} 
 \usepackage{algorithm}
@@ -181,8 +183,9 @@ Then by step 1 we obtain that $r_{ij}=0$ if $i\leq j-3$ since then by the form o
 \vdots  \\ 
 * \\ 
 0 \\ 
-\vdots \\
-\vdots \\
+0 \\
+0\\
+0 \\
 \vdots \\ 
 0
 \end{pmatrix}^*\begin{pmatrix}
@@ -198,4 +201,34 @@ Then by step 1 we obtain that $r_{ij}=0$ if $i\leq j-3$ since then by the form o
 \end{pmatrix} \leftarrow j\text{-th enttry} \]
 The above argument holds for all $i\leq j-3$. 
 \end{proof}
+Now we want to generalize the above ideas to the case where A still has only three non-zero bands.
+But now, the lower band has the distance $k-1$ from the diagonal and the upper band has the distance $l-1$ from the diagonal.\\
+Consider the following example for A: 
+\begin{figure}[	H]
+\includegraphics[scale=0.3]{example1.jpg}
+\caption{$k=200$ and $l=100$}
+\end{figure}
+
+\begin{thm}[General case]
+The upper triangular matrix $R$ in the $QR$ decomposition of $A$ has a $k+l$-band structure.
+\end{thm}
+\begin{proof}
+From the classical Gram Schmidt method we immediately see, that in the worst case, the first $j+k$ entries are non zero.
+Therefore, the inner product in the computation of the entries $r_{ij}$ is only zero if $i<j-l-k+2$. 
+\end{proof}
+Example of a matrix close to the worst case, where the number of non-zero entries (nz) increases by order 50:
+\begin{figure}[H] 
+    \subfigure[A]{\includegraphics[width=0.49\textwidth]{example2.jpg}} 
+    \subfigure[R]{\includegraphics[width=0.49\textwidth]{example3.jpg}}  
+
+    \caption{$k=131$ and $l=101$}
+\end{figure} 
+A special case occurs when $k=l$. Then again $R$ has only three non-zero band, i.e the diagonal, the band on the upper diagonal that has a distance $k$ to the diagonal and the upper diagonal that has a distance $2k$ to the diagonal.\\
+Again we have an example for this case:
+\begin{figure}[H] 
+    \subfigure[A]{\includegraphics[width=0.49\textwidth]{example4.jpg}} 
+    \subfigure[R]{\includegraphics[width=0.49\textwidth]{example5.jpg}}  
+
+    \caption{$k=l=100$ }
+\end{figure} 
 \end{document}
