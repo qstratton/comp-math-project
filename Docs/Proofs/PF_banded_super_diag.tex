@@ -97,7 +97,9 @@
 %\maketitle
 %\tableofcontents
 %\section{Introduction}
-\textbf{\emph{Pf.}} 
+%\textbf{\emph{Pf.}}
+\begin{proof}
+  
 Let $A = QR$ for $A,Q \in \C^{m \times m}$, $R \in \C^{m \times n}$, unitary $Q$, and upper triangular $R$. If $A$ has bandwidth $2p +1$ then for $i - j > p$, 
 	$$ 0 = a_{ij} = \sum_{k = 1}^{m} q_{ik}r_{kj}$$
 Since $R$ is upper triangular, $r_{kj} = 0$ for $k > j$. Then when $i > j + p$,
@@ -132,4 +134,5 @@ From (\ref{eq:1}) when $i+p < j - p -1$ (i.e., $j - i > 2p + 1$):
 		\end{pmatrix} = 0
 	$$
 Hence $R$ is upper triangular with its only nonzero entries in the diagonal and $2p$ super diagonals.
+\end{proof}
 \end{document}
