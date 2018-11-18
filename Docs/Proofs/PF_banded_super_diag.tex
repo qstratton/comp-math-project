@@ -1,0 +1,135 @@
+\documentclass{report}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm}
+\usepackage{amsmath, mathtools, amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{fancyhdr}
+% Code
+\usepackage{listings} 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+% Margins
+\usepackage{geometry}
+%\geometry{margin=1in} %% 
+% Graphics
+\usepackage{tikz}
+\usetikzlibrary{matrix} % matrices
+\usepackage{tikz-qtree} % Simple trees
+% Theorems/etc.
+\newtheorem{pic}{Figure}
+\numberwithin{pic}{section}
+\newtheorem{lem}{Lemma}
+\numberwithin{lem}{section}
+\newtheorem{thm}{Theorem}
+\numberwithin{thm}{section}
+\newtheorem{cor}{Corollary}
+\numberwithin{cor}{section}
+\theoremstyle{definition}
+\newtheorem{ex}{Example}
+\numberwithin{ex}{section}
+\newtheorem{defn}{Definition}
+\numberwithin{defn}{section}
+\theoremstyle{definition}
+\newtheorem{prob}{Problem}
+\theoremstyle{remark}
+\newtheorem*{con}{Conjecture}
+\newtheorem{rem}{Remark}
+\newtheorem*{cex}{Counterexample}
+\newtheorem*{ts}{T.S.}
+%%% COMMANDS %%%
+% Sets
+\newcommand{\set}[1]{\ensuremath{\left\{ #1\right\}}} % write sets
+\newcommand{\e}{\ensuremath{\epsilon}} % Epsilon
+\newcommand{\R}{\ensuremath{\mathbb{R}}} % Real Numbers
+\newcommand{\C}{\ensuremath{\mathbb{C}}} % Real Numbers
+\newcommand{\N}{\ensuremath{\mathbb{N}}} % Natural numbers
+\newcommand{\Q}{\ensuremath{\mathbb{Q}}} % Rationals
+\newcommand{\I}{\ensuremath{\mathbb{I}}} % Irrational Numbers
+\newcommand{\Z}{\ensuremath{\mathbb{Z}}} % Integers
+% Easier Delimiters?
+\newcommand{\lr}[2]{\ensuremath{\left#1 #2 \right #1}}
+% Absolute Value
+\newcommand{\abs}[1]{\ensuremath{\left| #1 \right|}}
+% Landau Notation
+\newcommand{\Oh}{\ensuremath{\mathcal{O}}} %%% IN MATH MODE
+\newcommand{\oh}{\ensuremath{\mathcal{o}}} %%% IN MATH MODE
+% Display style fractions
+\newcommand{\Frac}[2]{\displaystyle \frac{#1}{#2}}
+% Display style limits
+\newcommand{\Lim}[2]{\displaystyle \lim_{#1}{#2}}
+%%% Preference Stuff %%%
+\setcounter{section}{-1}
+\renewcommand\qedsymbol{{$\blacksquare$}}
+% Enumerate
+\renewcommand{\labelenumi}{(\alph{enumi})}
+\renewcommand{\labelenumii}{\roman{enumii}}
+% change proof environment
+\renewcommand*{\proofname}{Pf}
+% Line Spacing
+\renewcommand{\baselinestretch}{1.5}
+% Indentation
+\newlength\tindent
+\setlength{\tindent}{\parindent}
+\setlength{\parindent}{0pt}
+\renewcommand{\indent}{\hspace*{\tindent}}
+% Set title
+\title{Computational Math Project\\
+  {\large Illinois Institute of Technology}
+}
+\author{
+  Miles Bakenhus 
+  \and
+  Ahmed Lodhika 
+  \and
+  Gunjan Sharma 
+  \and
+  Quinn Stratton 
+  \and
+  Jan-Eric Sulzbach 
+}
+\date{\today}
+\begin{document}
+\fancyhead[l]{}
+\fancyhead[c]{}
+\fancyhead[r]{}
+% \pagestyle{fancy}
+%\maketitle
+%\tableofcontents
+%\section{Introduction}
+\textbf{\emph{Pf.}} 
+Let $A = QR$ for $A,Q \in \C^{m \times m}$, $R \in \C^{m \times n}$, unitary $Q$, and upper triangular $R$. If $A$ has bandwidth $2p +1$ then for $i - j > p$, 
+	$$ 0 = a_{ij} = \sum_{k = 1}^{m} q_{ik}r_{kj}$$
+Since $R$ is upper triangular, $r_{kj} = 0$ for $k > j$. Then when $i > j + p$,
+	$$ 0 = a_{ij} = \sum_{k = 1}^{j} q_{ik}r_{kj}$$
+so $q_{ij} = 0$ . Hence 
+	\begin{equation} \label{eq:1}
+		q_{j} = \begin{pmatrix} 
+			q_{1,j} \\
+			q_{2,j} \\
+			\vdots \\
+			q_{j+p,j} \\
+			0 \\
+			\vdots \\
+			0 \\
+		\end{pmatrix}
+	\end{equation}
+
+From (\ref{eq:1}) when $i+p < j - p -1$ (i.e., $j - i > 2p + 1$):
+	$$
+		r_{ij} = q_i^* a_j =\begin{pmatrix}
+			q_{1,i} & q_{2,i} &	\dots & q_{i+p,i} & 0 & \dots &	0 
+		\end{pmatrix}\begin{pmatrix} 
+		0 \\
+		\vdots \\
+		0 \\
+		a_{j-p-1,j} \\
+		\vdots \\
+		a_{j+p+1,j} \\
+		0 \\
+		\vdots \\
+		0 \\
+		\end{pmatrix} = 0
+	$$
+Hence $R$ is upper triangular with its only nonzero entries in the diagonal and $2p$ super diagonals.
+\end{document}
