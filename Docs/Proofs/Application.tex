@@ -1,0 +1,143 @@
+\documentclass{report}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm}
+\usepackage{amsmath, mathtools, amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{fancyhdr}
+\usepackage{subfigure}
+\usepackage{float}
+% Code
+\usepackage{listings} 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+% Margins
+\usepackage{geometry}
+%\geometry{margin=1in} %% 
+
+% Graphics
+\usepackage{tikz}
+\usetikzlibrary{matrix} % matrices
+\usepackage{tikz-qtree} % Simple trees
+
+% Theorems/etc.
+\newtheorem{pic}{Figure}
+\numberwithin{pic}{section}
+\newtheorem{lem}{Lemma}
+\numberwithin{lem}{section}
+\newtheorem{thm}{Theorem}
+\numberwithin{thm}{section}
+\newtheorem{cor}{Corollary}
+\numberwithin{cor}{section}
+
+\theoremstyle{definition}
+\newtheorem{ex}{Example}
+\numberwithin{ex}{section}
+\newtheorem{defn}{Definition}
+\numberwithin{defn}{section}
+\theoremstyle{definition}
+\newtheorem{prob}{Problem}
+
+\theoremstyle{remark}
+\newtheorem*{con}{Conjecture}
+\newtheorem{rem}{Remark}
+\newtheorem*{cex}{Counterexample}
+\newtheorem*{ts}{T.S.}
+
+%%% COMMANDS %%%
+% Sets
+\newcommand{\set}[1]{\ensuremath{\left\{ #1\right\}}} % write sets
+\newcommand{\e}{\ensuremath{\epsilon}} % Epsilon
+\newcommand{\R}{\ensuremath{\mathbb{R}}} % Real Numbers
+\newcommand{\N}{\ensuremath{\mathbb{N}}} % Natural numbers
+\newcommand{\Q}{\ensuremath{\mathbb{Q}}} % Rationals
+\newcommand{\I}{\ensuremath{\mathbb{I}}} % Irrational Numbers
+\newcommand{\Z}{\ensuremath{\mathbb{Z}}} % Integers
+% Easier Delimiters?
+\newcommand{\lr}[2]{\ensuremath{\left#1 #2 \right #1}}
+% Absolute Value
+\newcommand{\abs}[1]{\ensuremath{\left| #1 \right|}}
+% Landau Notation
+\newcommand{\Oh}{\ensuremath{\mathcal{O}}} %%% IN MATH MODE
+\newcommand{\oh}{\ensuremath{\mathcal{o}}} %%% IN MATH MODE
+% Display style fractions
+\newcommand{\Frac}[2]{\displaystyle \frac{#1}{#2}}
+% Display style limits
+\newcommand{\Lim}[2]{\displaystyle \lim_{#1}{#2}}
+
+%%% Preference Stuff %%%
+\setcounter{section}{-1}
+\renewcommand\qedsymbol{{$\blacksquare$}}
+% Enumerate
+\renewcommand{\labelenumi}{(\alph{enumi})}
+\renewcommand{\labelenumii}{\roman{enumii}}
+% change proof environment
+\renewcommand*{\proofname}{Pf}
+% Line Spacing
+\renewcommand{\baselinestretch}{1.5}
+% Indentation
+\newlength\tindent
+\setlength{\tindent}{\parindent}
+\setlength{\parindent}{0pt}
+\renewcommand{\indent}{\hspace*{\tindent}}
+
+\begin{document}
+\section{Origin of the problem and its applications}
+In this part of the project we explain the motivation behind our ideas and consider the applications of the results.\\
+First, we consider the standard elliptic equation in two dimensions
+\begin{align*}
+-\Delta u &= f ~\text{ in } \Omega\\
+u&=0 ~\text{ on } \partial\Omega.
+\end{align*}
+Then the discretised equation on a grid is
+\begin{align*}
+-\Delta_h u_{ij} &= f_{ij} ~\forall\,(x_i,y_i)\in \Omega_h,~f_{ij}=f(x_i,y_j)\\
+u_{ij}&=0 ~\forall\,(x_i,y_i)\in \partial\Omega_h,
+\intertext{where we use the second order central differencing to represent the Laplace operator}
+-\Delta_h u_{ij}= \Frac 1{h^2}\begin{pmatrix}
+0 & -1 & 0 \\ 
+-1 & 4 & -1 \\ 
+0 & -1 & 0
+\end{pmatrix}u_{ij}&= \Frac 1{h^2} \big(-u_{ij+1}-u_{i-1j}+4 u_{ij}-u_{i+1j}-u_{ij_1}\big)
+\end{align*}
+If we assume that the domain $\Omega$ is a square and ordering the grid points from left to right and bottom to top yields the following matrix of the system $A\in \R^{(h-1)^{-2}\times (h-1)^{-2}}$:
+\[A=h^2\begin{pmatrix}
+4 & -1 & 0 & \dots & 0 & -1 &  &  \\ 
+-1 & 4 & -1 &  &  &  & \ddots &  \\ 
+0 & -1 & 4 & \ddots &  &  &  & -1 \\ 
+\vdots  &  & \ddots & \ddots &  &  &  & 0\\ 
+0 &  &  &  &  &  &  & \vdots \\ 
+-1 &  &  &  &  & \ddots & \ddots & 0 \\ 
+ & \ddots &  &  &  & \ddots & 4 & -1 \\ 
+ &  & -1 & 0 & \dots & 0 & -1 & 4
+\end{pmatrix} \]
+And the problem we need to solve is the linear system $Au=f$.\\
+Therefore it is important to understand how the structure of $A$ affects the structure of the $QR$ decomposition.
+Note that in this case the highest and lowest off-diagonal has a distance of order   $h$ from the diagonal.\\
+
+Another example where these banded matrices show up is in the following:
+Consider the parabolic equation in two dimensions
+\[\frac{\partial u}{\partial t}=\sigma \Delta u,~ 0\leq x\leq X,\, 0\leq y\leq Y\, 0\leq t\leq T\]
+with Dirichlet boundary condition and a given initial data $u(x,y,0)=U^0(x,y)$.\\
+For the numerical implementation we consider the implicit Crank-Nicolson scheme
+\begin{align*}
+&-\frac{\mu_x}{2}\big(U_{j-1,l}^{n+1}+ U_{j+1,l}^{n+1}\big) -\frac{\mu_y}{2}\big(U_{j,l-1}^{n+1}+U_{j,l+1}^{n+1}\big)+\big(1+\mu_x+\mu_y\big)U_{j,l}^{n+1}\\
+=&\frac{\mu_x}{2}\big(U_{j-1,l}^{n}+ U_{j+1,l}^{n}\big) +\frac{\mu_y}{2}\big(U_{j,l-1}^{n}+U_{j,l+1}^{n}\big)+\big(1-\mu_x-\mu_y\big)U_{j,l}^{n},
+\end{align*}
+for $0\leq j\leq J_x$, $0\leq l\leq J_y$ and $n>0$.
+Again we can rewrite this as a linear system $AU^{n+1}=U^n$, where 
+\[A=\begin{pmatrix}
+1+\mu_x+\mu_y & -\frac{\mu_x}{2} & 0 & \dots & 0 & -\frac{\mu_y}{2} &  &  \\ 
+-\frac{\mu_x}{2} & 1+\mu_x+\mu_y & -\frac{\mu_x}{2} &  &  &  & \ddots &  \\ 
+0 & -\frac{\mu_x}{2} & 1+\mu_x+\mu_y & \ddots &  &  &  & -\frac{\mu_y}{2} \\ 
+\vdots  &  & \ddots & \ddots &  &  &  & 0\\ 
+0 &  &  &  &  &  &  & \vdots \\ 
+-\frac{\mu_y}{2} &  &  &  &  & \ddots & \ddots & 0 \\ 
+ & \ddots &  &  &  & \ddots & 1+\mu_x+\mu_y & -\frac{\mu_x}{2} \\ 
+ &  & -\frac{\mu_y}{2} & 0 & \dots & 0 & -\frac{\mu_x}{2} & 1+\mu_x+\mu_y
+\end{pmatrix} \]
+and $A\in\R^{(J_x-1)(J_y-1)\times (J_x-1)(J_y-1)}$ where the highest and lowest off-diagonal band have the distance $J_x-1$ from the diagonal.
+\begin{rem}
+In the case of three dimension, we would obtain one more non-zero sub/super-diagonal, now with a distance of $\mathcal{O}(J_x*J_y)$ from the diagonal.
+\end{rem}
+\end{document}
