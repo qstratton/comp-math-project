@@ -1,9 +1,9 @@
 1;
 num_trials = 10;
-#dims = [10 50 100 250 500 750 1000];
+%dims = [10 50 100 250 500 750 1000];
 dims = [10 500 750 1000];
-range = 1000000; # range for random matrix entries
-# Hold times for mgs.m, banded_mgs.m respectively
+range = 1000000; % range for random matrix entries
+% Hold times for mgs.m, banded_mgs.m respectively
 reg_data = [];
 opt_data = [];
 for j = 1:size(dims, 2)
@@ -27,13 +27,13 @@ for j = 1:size(dims, 2)
       %{ Add times to respective matrices %}
       reg_times = [reg_times reg_time];
       opt_times = [opt_times opt_time];
-    endfor
+    end
     reg_avg = sum(reg_times) / size(reg_times, 2);
     opt_avg = sum(opt_times) / size(opt_times, 2);
     reg_data(j, p) = reg_avg;
     opt_data(j, p) = opt_avg;
-  endfor
-endfor
+  end
+end
 
 csvwrite("reg.csv", reg_data);
 csvwrite("opt.csv", opt_data);
