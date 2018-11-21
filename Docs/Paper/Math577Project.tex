@@ -338,10 +338,10 @@ the following way.
   \begin{algorithmic}[1]
     \For{$i = 1$\textbf{ to }$n$}
     \State$r_{ii}\gets \norm{\mathbf{a_i}}_2$
-    \State$q_i\gets \mathbf{a_i} / r_{ii}$
+    \State$\mathbf{q_i}\gets \mathbf{a_i} / r_{ii}$
     \For{$j = i + 1$\textbf{ to }$\text{min}\set{i + 2p, n}$}
     \State$r_{ij}\gets \mathbf{q_i}^*\mathbf{a_j}$
-    \State$\mathbf{v_j}\gets\mathbf{v_j} - r_{ij}\mathbf{q_i}$
+    \State$\mathbf{a_j}\gets\mathbf{a_j} - r_{ij}\mathbf{q_i}$
     \EndFor
     \EndFor
   \end{algorithmic}

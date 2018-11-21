@@ -1,5 +1,5 @@
 1;
-num_trials = 10;
+num_trials = 5;
 #dims = [10 50 100 250 500 750 1000];
 dims = [10 500 750 1000];
 range = 1000000; # range for random matrix entries
