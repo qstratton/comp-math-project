@@ -257,7 +257,7 @@ The above argument holds for all $i\leq j-3$.
 
 \begin{proof}
   
-Let $A = QR$ for $A,Q \in \C^{m \times m}$, $R \in \C^{m \times n}$, unitary $Q$, and upper triangular $R$. If $A$ has bandwidth $2p +1$ then for $i - j > p$, 
+Let $A = QR$ for $A,Q \in \C^{m \times m}$, $R \in \C^{m \times m}$, unitary $Q$, and upper triangular $R$. If $A$ has bandwidth $2p +1$ then for $i - j > p$, 
 	$$ 0 = a_{ij} = \sum_{k = 1}^{m} q_{ik}r_{kj}$$
 Since $R$ is upper triangular, $r_{kj} = 0$ for $k > j$. Then when $i > j + p$,
 	$$ 0 = a_{ij} = \sum_{k = 1}^{j} q_{ik}r_{kj}$$
@@ -292,6 +292,21 @@ From (\ref{eq:1}) when $i+p < j - p -1$ (i.e., $j - i > 2p + 1$):
 	$$
 Hence $R$ is upper triangular with its only nonzero entries in the diagonal and $2p$ super diagonals.
 \end{proof}
+\begin{figure}[H] 
+    \subfigure[A]{\includegraphics[width=0.49\textwidth]{example 8.jpg}} 
+    \subfigure[R]{\includegraphics[width=0.49\textwidth]{example 9.jpg}}  
+
+    \caption{bandwith 101, i.e $p=50$}
+\end{figure} 
+\begin{rem}
+This results also holds for the matrices considered in the first part, i.e. the matrices derived from finite difference methods.
+\end{rem}
+\begin{figure}[H] 
+    \subfigure[A]{\includegraphics[width=0.49\textwidth]{example 6.jpg}} 
+    \subfigure[R]{\includegraphics[width=0.49\textwidth]{example 7.jpg}}  
+
+    \caption{A has the special form as in Section 1}
+\end{figure} 
 \subsection{Sparse Diagonal Matrices}
 Now we want to generalize the above ideas to the case where A still has only three non-zero bands.
 But now, the lower band has the distance $k-1$ from the diagonal and the upper band has the distance $l-1$ from the diagonal.\\
@@ -323,6 +338,14 @@ Again we have an example for this case:
 
     \caption{$k=l=100$ }
 \end{figure} 
+\begin{cor}
+Let the square matrix $A$ have the form as mentioned in the example. 
+Then $R$ of the $QR$ decomposition has the form $r_{ij}\neq 0$ only for the cases $i=j$, $i+k+1$ and $i+2k+2$.
+\end{cor}
+\begin{proof}
+From the ideas of the theorems before, the column vector $q_i$ of $Q$ in the $QR$ decomposition has the form $q_i^*=(\underbrace{0\dots0}_{i\mod k}\,*\,\underbrace{0\dots0}_{k }\,*|\dots|*\,\underbrace{0\dots0}_{k}\,\underbrace{*}_{i-th}\,0\dots0\,*\,0,\dots)$.
+Therefore $r_{ij}= q_i^* a_j=0$ for $i\neq j$ or $i+k+1\neq j$ or $i+2k+2\neq j$.
+\end{proof}
 \section{Algorithms and Results}
 Based on the properties proved in the last section, it is fairly straightforward
 to modify existing algorithms for finding a QR-factorization of a matrix to
@@ -333,15 +356,18 @@ of $A$, $A = QR$. Then by \textbf{THEOREM}, we
 know that if $j > i + 2p$, $r_{ij} = 0$. We can alter the well-known
 \textit{Modified Gram-Schmidt} algorithm to take advantage of the above fact in
 the following way.
-\begin{algorithm}
+\begin{algorithm}[H]
   \caption{MGS for Banded Matrices}
   \begin{algorithmic}[1]
+  	\For{$i = 1$\textbf{ to }$n$}
+   	\State$v_i\gets a_i$
+    \EndFor
     \For{$i = 1$\textbf{ to }$n$}
-    \State$r_{ii}\gets \norm{\mathbf{a_i}}_2$
-    \State$\mathbf{q_i}\gets \mathbf{a_i} / r_{ii}$
+    \State$r_{ii}\gets \norm{\mathbf{v_i}}_2$
+    \State$q_i\gets \mathbf{v_i} / r_{ii}$
     \For{$j = i + 1$\textbf{ to }$\text{min}\set{i + 2p, n}$}
     \State$r_{ij}\gets \mathbf{q_i}^*\mathbf{a_j}$
-    \State$\mathbf{a_j}\gets\mathbf{a_j} - r_{ij}\mathbf{q_i}$
+    \State$\mathbf{v_j}\gets\mathbf{v_j} - r_{ij}\mathbf{q_i}$
     \EndFor
     \EndFor
   \end{algorithmic}
@@ -365,7 +391,36 @@ banded matrices.
     & & & & & &
   \end{tabular}
 \end{center}
+\subsection{Special Cases}
+In the special case of the symmetric tridiagonal matrix $A$, where the super and sub diagonal have a distance $k$ from the diagonal, we can improve the \textbf{Algorithm 1} even further using \textbf{Theorem} and \textbf{Corollary}.
+\begin{algorithm}[H]
+  \caption{MGS for special tridiagonal Matrices }
+  \begin{algorithmic}[1]
+    \For{$i = 1$\textbf{ to }$n$}
+   	\State$v_i\gets a_i$
+    \EndFor
+    \For{$i = 1$\textbf{ to }$n$}
+    \State$r_{ii}\gets \norm{\mathbf{v_i}}_2$
+    \State$q_i\gets \mathbf{v_i} / r_{ii}$ 
+    \If{$i+2k+2\leq n$}
+    	\State$r_{i,i+2k+2}\gets \mathbf{q_i}^*\mathbf{a_{i+2k+2}}$
+    	\State$\mathbf{v_{i+2k+2}}\gets\mathbf{v_{i+2k+2}} - r_{i,i+2k+2}\mathbf{q_i}$
+    	\State$r_{i,i+k+}\gets \mathbf{q_i}^*\mathbf{a_{i+k+1}}$
+    	\State$\mathbf{v_{i+k+1}}\gets\mathbf{v_{i+k+1}} - r_{i,i+k+1}\mathbf{q_i}$
+    	\ElsIf{$i+k+1\leq n$}
+    	\State$r_{i,i+k+}\gets \mathbf{q_i}^*\mathbf{a_{i+k+1}}$
+    	\State$\mathbf{v_{i+k+1}}\gets\mathbf{v_{i+k+1}} - r_{i,i+k+1}\mathbf{q_i}$
+       	\EndIf
+    \EndFor
+  \end{algorithmic}
+\end{algorithm}
+\subsection{Flop count}
+Here, we are going to give the theoretical flop count of the two algorithms and compare it with the MGS algorithm in \cite{nla}.\\
+Recall that the MGS requires $\sim 2n^3$ operations, where the most amount of work is due to an inner \textit{for}-loop.
+In both of the above algorithms we can eliminate/ heavily reduce the the size of the inner \textit{for}-loop.
+Therefore the first algorithm has a flop count of $\sim 8*2pn^2$ and the second one for the special case tridiagonal matrices we have $\sim 8n^2$ flops.
 \section{Further Study}
+
 	\addcontentsline{toc}{section}{References}
 	\bibliographystyle{unsrt}
 	\bibliography{comp-math}
