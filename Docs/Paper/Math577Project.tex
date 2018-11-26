@@ -104,10 +104,9 @@
 \newpage
 \tableofcontents
 \section{Introduction}
-
+\indent In this paper we discuss what motivates the study of banded matrices and show several results regarding their properties. We will also consider the application of these properties to find a more efficient implementation of the Modified Gram-Schmidt Algorithm. Finally, we will discuss potential future work.
 \section{Origin of the problem and its applications}
-In this part of the project we explain the motivation behind our ideas and consider the applications of the results.\\
-First, we consider the standard elliptic equation in two dimensions
+\paragraph{} In this part of the project we explain the motivation behind our ideas and examine the applications of our results. First, we consider the standard elliptic equation in two dimensions
 \begin{align*}
 -\Delta u &= f ~\text{ in } \Omega\\
 u&=0 ~\text{ on } \partial\Omega.
@@ -116,14 +115,14 @@ Then the discretised equation on a grid is
 \begin{align*}
 -\Delta_h u_{ij} &= f_{ij} ~\forall\,(x_i,y_i)\in \Omega_h,~f_{ij}=f(x_i,y_j)\\
 u_{ij}&=0 ~\forall\,(x_i,y_i)\in \partial\Omega_h,
-\intertext{where we use the second order central differencing to represent the Laplace operator}
+\intertext{where we use the second-order central differencing to represent the Laplace operator}
 -\Delta_h u_{ij}= \Frac 1{h^2}\begin{pmatrix}
 0 & -1 & 0 \\ 
 -1 & 4 & -1 \\ 
 0 & -1 & 0
 \end{pmatrix}u_{ij}&= \Frac 1{h^2} \big(-u_{ij+1}-u_{i-1j}+4 u_{ij}-u_{i+1j}-u_{ij_1}\big)
 \end{align*}
-If we assume that the domain $\Omega$ is a square and ordering the grid points from left to right and bottom to top yields the following matrix of the system $A\in \R^{(h-1)^{-2}\times (h-1)^{-2}}$:
+If we assume that the domain $\Omega$ is a square, ordering the grid points from left to right and bottom to top yields the following matrix of the system $A\in \R^{(h-1)^{-2}\times (h-1)^{-2}}$:
 \[A=h^2\begin{pmatrix}
 4 & -1 & 0 & \dots & 0 & -1 &  &  \\ 
 -1 & 4 & -1 &  &  &  & \ddots &  \\ 
@@ -134,21 +133,20 @@ If we assume that the domain $\Omega$ is a square and ordering the grid points f
  & \ddots &  &  &  & \ddots & 4 & -1 \\ 
  &  & -1 & 0 & \dots & 0 & -1 & 4
 \end{pmatrix} \]
-And the problem we need to solve is the linear system $Au=f$.\\
-Therefore it is important to understand how the structure of $A$ affects the structure of the $QR$ decomposition.
-Note that in this case the highest and lowest off-diagonal has a distance of order   $h$ from the diagonal.\\
+And, the problem we need to solve is the linear system $Au=f$.\\
+\indent Therefore, it is important to understand how the structure of $A$ affects the structure of the $QR$ decomposition.
+Note that in this case the highest and lowest off-diagonal has a distance of order $h$ from the diagonal.
 
-Another example where these banded matrices show up is in the following:
-Consider the parabolic equation in two dimensions
+\paragraph{} Another example where these banded matrices show up is in the following:
+consider the parabolic equation in two dimensions
 \[\frac{\partial u}{\partial t}=\sigma \Delta u,~ 0\leq x\leq X,\, 0\leq y\leq Y\, 0\leq t\leq T\]
-with Dirichlet boundary condition and a given initial data $u(x,y,0)=U^0(x,y)$.\\
-For the numerical implementation we consider the implicit Crank-Nicolson scheme
+with Dirichlet boundary condition and given initial data $u(x,y,0)=U^0(x,y)$. For the numerical implementation we consider the implicit Crank-Nicolson scheme
 \begin{align*}
 &-\frac{\mu_x}{2}\big(U_{j-1,l}^{n+1}+ U_{j+1,l}^{n+1}\big) -\frac{\mu_y}{2}\big(U_{j,l-1}^{n+1}+U_{j,l+1}^{n+1}\big)+\big(1+\mu_x+\mu_y\big)U_{j,l}^{n+1}\\
 =&\frac{\mu_x}{2}\big(U_{j-1,l}^{n}+ U_{j+1,l}^{n}\big) +\frac{\mu_y}{2}\big(U_{j,l-1}^{n}+U_{j,l+1}^{n}\big)+\big(1-\mu_x-\mu_y\big)U_{j,l}^{n},
 \end{align*}
 for $0\leq j\leq J_x$, $0\leq l\leq J_y$ and $n>0$.
-Again we can rewrite this as a linear system $AU^{n+1}=U^n$, where 
+Again, we can rewrite this as a linear system $AU^{n+1}=U^n$, with 
 \[A=\begin{pmatrix}
 1+\mu_x+\mu_y & -\frac{\mu_x}{2} & 0 & \dots & 0 & -\frac{\mu_y}{2} &  &  \\ 
 -\frac{\mu_x}{2} & 1+\mu_x+\mu_y & -\frac{\mu_x}{2} &  &  &  & \ddots &  \\ 
@@ -163,11 +161,11 @@ and $A\in\R^{(J_x-1)(J_y-1)\times (J_x-1)(J_y-1)}$ where the highest and lowest 
 \begin{rem}
 In the case of three dimension, we would obtain one more non-zero sub/super-diagonal, now with a distance of $\mathcal{O}(J_x*J_y)$ from the diagonal.
 \end{rem}
-
+\pagebreak
 \section{Matrix Properties}
 \subsection{Tridiagonal Matrices}
 \begin{thm}
-If $A$ is a tridiagonal matrix. Then R in the the product $A=QR$ is a upper triangular matrix with non zero entries only in the diagonal and the two super diagonals.
+If $A$ is a tridiagonal matrix, then R in the product $A=QR$ is an upper triangular matrix with non-zero entries only in the diagonal and first two superdiagonals.
 \end{thm}
 \[A=\begin{pmatrix}
 a_{11} & a_{12} &  &   \\ 
@@ -181,8 +179,8 @@ r_{11} & r_{12} & r_{13} &  \\
  &  &  & r_{mm}
 \end{pmatrix}  \]
 \begin{proof}
-To prove the statement we will use the classical Gram-Schmidt method for the QR decomposition.\\
-Step 1: we want to show that $q_j$ has the form $q_j=\begin{pmatrix}
+To prove the statement we will use the classical Gram-Schmidt (CGS) method for the QR decomposition.\\ 
+Step 1: show that $q_j$ has the form $q_j=\begin{pmatrix}
 * \\ 
 \vdots \\ 
 * \\ 
@@ -191,14 +189,14 @@ Step 1: we want to show that $q_j$ has the form $q_j=\begin{pmatrix}
 \end{pmatrix} \leftarrow j+1\text{-th entry}$.\\
 We prove this by induction:
 \begin{description}
-\item[Base step] $j=1$ the if we assume that $\|a_1\|=1$ then $q_1=a_1$ thus
+\item[Base step:] For $j=1$, if we assume that $\|a_1\|=1$, then $q_1=a_1$. Thus
 \[q_1= \begin{pmatrix}
 a_{11} \\ 
 a_{21} \\ 
 0 \\  
 \vdots
 \end{pmatrix}\]
-\item[Induction step] Assume that the statement holds for $j-1$. Then
+\item[Induction step:] Assume that the statement holds for $j-1$. Then
 \[v_j=a_j-\sum_{k=1}^{j-1} (q_k^* a_j)q_k~\text{ and } q_j= v_j/\|v\|_j\]
 and by using the form of $q_{j-1}$ we obtain
 \[q_j= \begin{pmatrix}
@@ -227,9 +225,9 @@ a_{j+1,j} \\
 \vdots
 \end{pmatrix}\leftarrow j+1\text{-th entry} \]
 \end{description}
-Step 2: Compute $r_{ij}$ in the CGS method\\
-For $j=1$ to $n$ and for $i=1$ to $j-1$: $r_{ij}= q_i^*a_j$.
-Then by step 1 we obtain that $r_{ij}=0$ if $i\leq j-3$ since then by the form of the vectors $q_{j-3}$ and $a_j$
+Step 2: compute $r_{ij}$ in the CGS method.\\
+For $j$ from 1 to $n$ and for $i$ from 1 to $j-1$, we have $r_{ij}= q_i^*a_j$.
+Then by step 1, if $i\leq j-3$, we obtain $r_{ij}=0$ from the form of the vectors $q_{j-3}$ and $a_j$:
 \[0=\begin{pmatrix}
 * \\ 
 \vdots  \\ 
@@ -251,17 +249,17 @@ Then by step 1 we obtain that $r_{ij}=0$ if $i\leq j-3$ since then by the form o
 \vdots\\
 0
 \end{pmatrix} \leftarrow j\text{-th enttry} \]
-The above argument holds for all $i\leq j-3$. 
+Since, the above argument holds for all $i\leq j-3$, $R$ is non-zero only for the main diagonal and first two superdiagonals.
 \end{proof}
 \subsection{General Banded Matrices}
-
-\begin{proof}
-  
-Let $A = QR$ for $A,Q \in \C^{m \times m}$, $R \in \C^{m \times n}$, unitary $Q$, and upper triangular $R$. If $A$ has bandwidth $2p +1$ then for $i - j > p$, 
+\begin{thm}
+	If $A$ is a banded matrix with bandwidth $2p + 1$, then R in the orthogonalization $A=QR$ is an upper triangular matrix with non-zero entries only in the main diagonal and first $2p$ superdiagonals.
+\end{thm}
+\begin{proof} If $A$ has bandwidth $2p +1$ then for $i - j > p$, 
 	$$ 0 = a_{ij} = \sum_{k = 1}^{m} q_{ik}r_{kj}$$
-Since $R$ is upper triangular, $r_{kj} = 0$ for $k > j$. Then when $i > j + p$,
+For $k > j$, since $R$ is upper triangular, $r_{kj} = 0$. Then, when $i > j + p$,
 	$$ 0 = a_{ij} = \sum_{k = 1}^{j} q_{ik}r_{kj}$$
-so $q_{ij} = 0$ . Hence 
+This gives $q_{ij} = 0$. Hence, for each $j$
 	\begin{equation} \label{eq:1}
 		q_{j} = \begin{pmatrix} 
 			q_{1,j} \\
@@ -274,7 +272,7 @@ so $q_{ij} = 0$ . Hence
 		\end{pmatrix}
 	\end{equation}
 
-From (\ref{eq:1}) when $i+p < j - p -1$ (i.e., $j - i > 2p + 1$):
+From (\ref{eq:1}), when $i+p < j - p $ (i.e., $j - i > 2p$):
 	$$
 		r_{ij} = q_i^* a_j =\begin{pmatrix}
 			q_{1,i} & q_{2,i} &	\dots & q_{i+p,i} & 0 & \dots &	0 
@@ -282,21 +280,21 @@ From (\ref{eq:1}) when $i+p < j - p -1$ (i.e., $j - i > 2p + 1$):
 		0 \\
 		\vdots \\
 		0 \\
-		a_{j-p-1,j} \\
+		a_{j-p,j} \\
 		\vdots \\
-		a_{j+p+1,j} \\
+		a_{j+p,j} \\
 		0 \\
 		\vdots \\
 		0 \\
 		\end{pmatrix} = 0
 	$$
-Hence $R$ is upper triangular with its only nonzero entries in the diagonal and $2p$ super diagonals.
+Therefore, $R$ is upper triangular with its only non-zero entries in the main diagonal and $2p$ superdiagonals.
 \end{proof}
 \subsection{Sparse Diagonal Matrices}
-Now we want to generalize the above ideas to the case where A still has only three non-zero bands.
-But now, the lower band has the distance $k-1$ from the diagonal and the upper band has the distance $l-1$ from the diagonal.\\
-Consider the following example for A: 
-\begin{figure}[	H]
+\indent Now we want to generalize the ideas from Theorems 2.1 and 2.2 to the case where $A$ still has only three non-zero bands, but the lower band is distance $k-1$ from the diagonal and the upper band is distance $l-1$ from the diagonal.
+Consider the following example for $A$: 
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.3]{example1.jpg}
 \caption{$k=200$ and $l=100$}
 \end{figure}
@@ -305,18 +303,17 @@ Consider the following example for A:
 The upper triangular matrix $R$ in the $QR$ decomposition of $A$ has a $k+l$-band structure.
 \end{thm}
 \begin{proof}
-From the classical Gram Schmidt method we immediately see, that in the worst case, the first $j+k$ entries are non zero.
+From the CGS method we immediately see, in the worst case, the first $j+k$ entries are non zero.
 Therefore, the inner product in the computation of the entries $r_{ij}$ is only zero if $i<j-l-k+2$. 
 \end{proof}
-Example of a matrix close to the worst case, where the number of non-zero entries (nz) increases by order 50:
+\indent To illustrate this, consider the example of a matrix close to the worst case, where the number of non-zero entries (nz) increases by order 50:
 \begin{figure}[H] 
     \subfigure[A]{\includegraphics[width=0.49\textwidth]{example2.jpg}} 
     \subfigure[R]{\includegraphics[width=0.49\textwidth]{example3.jpg}}  
 
     \caption{$k=131$ and $l=101$}
 \end{figure} 
-A special case occurs when $k=l$. Then again $R$ has only three non-zero band, i.e the diagonal, the band on the upper diagonal that has a distance $k$ to the diagonal and the upper diagonal that has a distance $2k$ to the diagonal.\\
-Again we have an example for this case:
+\indent A special case occurs when $k=l$. Again, $R$ has only three non-zero bands: the main diagonal, the superdiagonal that has a distance $k$ to the main diagonal, and the superdiagonal that has a distance $2k$ to the main diagonal. For $k = l = 100$:
 \begin{figure}[H] 
     \subfigure[A]{\includegraphics[width=0.49\textwidth]{example4.jpg}} 
     \subfigure[R]{\includegraphics[width=0.49\textwidth]{example5.jpg}}  
@@ -324,15 +321,15 @@ Again we have an example for this case:
     \caption{$k=l=100$ }
 \end{figure} 
 \section{Algorithms and Results}
-Based on the properties proved in the last section, it is fairly straightforward
-to modify existing algorithms for finding a QR-factorization of a matrix to
+\indent Based on the properties proved in section 2, it is fairly straightforward
+to modify existing algorithms for finding the QR-factorization of a matrix, to
 exploit sparsity patterns.
 \subsection{General Banded Matrices}
-Suppose $A\in C^{m\times n}$ with bandwidth $p$. Consider some QR-factorization
-of $A$, $A = QR$. Then by \textbf{THEOREM}, we
+\indent Suppose $A\in C^{m\times n}$ with bandwidth $2p +1$. Consider the QR-factorization
+of $A$, $A = QR$. Then by Theorem 2.2, we
 know that if $j > i + 2p$, $r_{ij} = 0$. We can alter the well-known
-\textit{Modified Gram-Schmidt} algorithm to take advantage of the above fact in
-the following way.
+\textit{Modified Gram-Schmidt} (MGS) algorithm to take advantage of this fact, as seen in
+Algorithm 1.
 \begin{algorithm}
   \caption{MGS for Banded Matrices}
   \begin{algorithmic}[1]
@@ -348,7 +345,7 @@ the following way.
   [Note that this is based on the \textit{Modified
     Gram-Schmidt} algorithm as described in \cite{nla}] 
 \end{algorithm}
-Below are some results for the performance of \textbf{MGS for Banded Matrices}
+\indent Below are some results for the performance of \textbf{MGS for Banded Matrices}
 and the performance of the standard MGS algorithm applied to the same random
 banded matrices.
 \begin{center}
@@ -366,6 +363,7 @@ banded matrices.
   \end{tabular}
 \end{center}
 \section{Further Study}
+\indent There are several avenues for future work on this topic. Other algorithms, such as Householder triangularization, may be able to take advantage of the properties of banded matrices and address the poor stability of Modified Gram-Schmidt. Our report also never considers memory optimization with the use of a compressed storage format, such as Compressed Sparse Row (CSR) or diagonal form. Finally, further work may investigate the application of banded matrix properties to algorithmic parallelization of Modified Gram-Schmidt and other algorithms.
 	\addcontentsline{toc}{section}{References}
 	\bibliographystyle{unsrt}
 	\bibliography{comp-math}
