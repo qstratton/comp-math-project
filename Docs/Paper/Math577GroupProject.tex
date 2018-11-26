@@ -252,17 +252,10 @@ Then by step 1, if $i\leq j-3$, we obtain $r_{ij}=0$ from the form of the vector
 Since, the above argument holds for all $i\leq j-3$, $R$ is non-zero only for the main diagonal and first two superdiagonals.
 \end{proof}
 \subsection{General Banded Matrices}
-<<<<<<< HEAD
-
-\begin{proof}
-  
-Let $A = QR$ for $A,Q \in \C^{m \times m}$, $R \in \C^{m \times m}$, unitary $Q$, and upper triangular $R$. If $A$ has bandwidth $2p +1$ then for $i - j > p$, 
-=======
 \begin{thm}
 	If $A$ is a banded matrix with bandwidth $2p + 1$, then R in the orthogonalization $A=QR$ is an upper triangular matrix with non-zero entries only in the main diagonal and first $2p$ superdiagonals.
 \end{thm}
 \begin{proof} If $A$ has bandwidth $2p +1$ then for $i - j > p$, 
->>>>>>> miles
 	$$ 0 = a_{ij} = \sum_{k = 1}^{m} q_{ik}r_{kj}$$
 For $k > j$, since $R$ is upper triangular, $r_{kj} = 0$. Then, when $i > j + p$,
 	$$ 0 = a_{ij} = \sum_{k = 1}^{j} q_{ik}r_{kj}$$
@@ -297,21 +290,6 @@ From (\ref{eq:1}), when $i+p < j - p $ (i.e., $j - i > 2p$):
 	$$
 Therefore, $R$ is upper triangular with its only non-zero entries in the main diagonal and $2p$ superdiagonals.
 \end{proof}
-\begin{figure}[H] 
-    \subfigure[A]{\includegraphics[width=0.49\textwidth]{example 8.jpg}} 
-    \subfigure[R]{\includegraphics[width=0.49\textwidth]{example 9.jpg}}  
-
-    \caption{bandwith 101, i.e $p=50$}
-\end{figure} 
-\begin{rem}
-This results also holds for the matrices considered in the first part, i.e. the matrices derived from finite difference methods.
-\end{rem}
-\begin{figure}[H] 
-    \subfigure[A]{\includegraphics[width=0.49\textwidth]{example 6.jpg}} 
-    \subfigure[R]{\includegraphics[width=0.49\textwidth]{example 7.jpg}}  
-
-    \caption{A has the special form as in Section 1}
-\end{figure} 
 \subsection{Sparse Diagonal Matrices}
 \indent Now we want to generalize the ideas from Theorems 2.1 and 2.2 to the case where $A$ still has only three non-zero bands, but the lower band is distance $k-1$ from the diagonal and the upper band is distance $l-1$ from the diagonal.
 Consider the following example for $A$: 
@@ -342,14 +320,6 @@ Therefore, the inner product in the computation of the entries $r_{ij}$ is only 
 
     \caption{$k=l=100$ }
 \end{figure} 
-\begin{cor}
-Let the square matrix $A$ have the form as mentioned in the example. 
-Then $R$ of the $QR$ decomposition has the form $r_{ij}\neq 0$ only for the cases $i=j$, $i+k+1$ and $i+2k+2$.
-\end{cor}
-\begin{proof}
-From the ideas of the theorems before, the column vector $q_i$ of $Q$ in the $QR$ decomposition has the form $q_i^*=(\underbrace{0\dots0}_{i\mod k}\,*\,\underbrace{0\dots0}_{k }\,*|\dots|*\,\underbrace{0\dots0}_{k}\,\underbrace{*}_{i-th}\,0\dots0\,*\,0,\dots)$.
-Therefore $r_{ij}= q_i^* a_j=0$ for $i\neq j$ or $i+k+1\neq j$ or $i+2k+2\neq j$.
-\end{proof}
 \section{Algorithms and Results}
 \indent Based on the properties proved in section 2, it is fairly straightforward
 to modify existing algorithms for finding the QR-factorization of a matrix, to
@@ -358,23 +328,14 @@ exploit sparsity patterns.
 \indent Suppose $A\in C^{m\times n}$ with bandwidth $2p +1$. Consider the QR-factorization
 of $A$, $A = QR$. Then by Theorem 2.2, we
 know that if $j > i + 2p$, $r_{ij} = 0$. We can alter the well-known
-<<<<<<< HEAD
-\textit{Modified Gram-Schmidt} algorithm to take advantage of the above fact in
-the following way.
-\begin{algorithm}[H]
-=======
 \textit{Modified Gram-Schmidt} (MGS) algorithm to take advantage of this fact, as seen in
 Algorithm 1.
 \begin{algorithm}
->>>>>>> miles
   \caption{MGS for Banded Matrices}
   \begin{algorithmic}[1]
-  	\For{$i = 1$\textbf{ to }$n$}
-   	\State$v_i\gets a_i$
-    \EndFor
     \For{$i = 1$\textbf{ to }$n$}
-    \State$r_{ii}\gets \norm{\mathbf{v_i}}_2$
-    \State$q_i\gets \mathbf{v_i} / r_{ii}$
+    \State$r_{ii}\gets \norm{\mathbf{a_i}}_2$
+    \State$q_i\gets \mathbf{a_i} / r_{ii}$
     \For{$j = i + 1$\textbf{ to }$\text{min}\set{i + 2p, n}$}
     \State$r_{ij}\gets \mathbf{q_i}^*\mathbf{a_j}$
     \State$\mathbf{v_j}\gets\mathbf{v_j} - r_{ij}\mathbf{q_i}$
@@ -430,12 +391,8 @@ Recall that the MGS requires $\sim 2n^3$ operations, where the most amount of wo
 In both of the above algorithms we can eliminate/ heavily reduce the the size of the inner \textit{for}-loop.
 Therefore the first algorithm has a flop count of $\sim 8*2pn^2$ and the second one for the special case tridiagonal matrices we have $\sim 8n^2$ flops.
 \section{Further Study}
-<<<<<<< HEAD
-
-=======
 \indent There are several avenues for future work on this topic. Other algorithms, such as Householder triangularization, may be able to take advantage of the properties of banded matrices and address the poor stability of Modified Gram-Schmidt. Our report also never considers memory optimization with the use of a compressed storage format, such as Compressed Sparse Row (CSR) or diagonal form. Finally, further work may investigate the application of banded matrix properties to algorithmic parallelization of Modified Gram-Schmidt and other algorithms.
->>>>>>> miles
 	\addcontentsline{toc}{section}{References}
 	\bibliographystyle{unsrt}
-	\bibliography{comp-math}
+\bibliography{comp-math}
 \end{document}
