@@ -8,16 +8,15 @@ optimized QR-factorization methods
 %}
 
 function R = mgs(A)
-  [m,n] = size(A); # Get dimensions of input matrix
-  R = eye(m)(:,1:n);
+  [m,n] = size(A); % Get dimensions of input matrix
+  R = eye(m)
+  R = R(:,1:n);
   for i = 1:n
     R(i,i) = norm(A(:,i), 2);
     q = A(:,i) / R(i,i);
     for j = i + 1:n
       R(i,j) = q'*A(:,j);
       A(:,j) = A(:,j) - R(i,j)*q;
-    endfor
-  endfor
-endfunction
-
-
+    end
+  end
+end
