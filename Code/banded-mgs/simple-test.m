@@ -1,13 +1,13 @@
 1;
-num_trials = 5;
+num_trials = 10;
 %dims = [10 50 100 250 500 750 100];
-dim = 1500;
+dim = 1000;
 range = 1000000; % range for random matrix entries
 % Hold times for mgs.m, banded_mgs.m respectively
-reg_data = [];
-opt_data = [];
 step_size = dim / 5;
 bandwidths = 0:step_size:dim;
+reg_data = zeros(1, size(bandwidths, 2));
+opt_data = zeros(1, size(bandwidths, 2));
 for p = 1:size(bandwidths,2);
   for i = 1:num_trials
     A = banded(dim,dim,bandwidths(p),range);
