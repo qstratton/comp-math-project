@@ -1,18 +1,15 @@
 1;
 num_trials = 1;
 %dims = [10 50 100 250 500 750 100];
-dims = [50 100 500 1000 1500];
+dim = 1500;
 range = 1000000; % range for random matrix entries
 % Hold times for mgs.m, banded_mgs.m respectively
 reg_data = [];
 opt_data = [];
-for j = 1:size(dims, 2)
-  step_size = dims(1,j) / 5;
-  bandwidths = 0:step_size:dims(1,j);
-  reg_data = [reg_data; zeros(1,size(bandwidths, 2))];
-  opt_data = [opt_data; zeros(1,size(bandwidths, 2))];
+  step_size = dim / 5;
+  bandwidths = 0:step_size:dim;
   for p = 1:size(bandwidths,2);
-      A = banded(dims(j),dims(j),bandwidths(p),range);
+      A = banded(dim,dim,bandwidths(p),range);
       %{ Test regular mgs %}
       tic();
       mgs(A);
@@ -22,9 +19,8 @@ for j = 1:size(dims, 2)
       banded_mgs(A,bandwidths(p));
       opt_time = toc();
       %{ Add times to respective matrices %}
-    reg_data(j, p) = reg_time;
-    opt_data(j, p) = opt_time;
-    end
+    reg_data(1, p) = reg_time;
+    opt_data(1, p) = opt_time;
   end
 
 csvwrite('reg-times.csv', reg_data);
