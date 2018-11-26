@@ -7,6 +7,7 @@ Overwrites input matrix to produce upper triangular matrix
 %}
 
 function R = banded_mgs(A, p)
+  echo off;
   [m,n] = size(A); % Get dimensions of input matrix
   R = eye(m);
   R = R(:,1:n);
