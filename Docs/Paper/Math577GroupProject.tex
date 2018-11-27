@@ -10,7 +10,8 @@
 % Code
 \usepackage{listings} 
 \usepackage{algorithm}
-\usepackage[noend]{algpseudocode}
+\usepackage{algpseudocode}
+\usepackage{float}
 % Margins
 \usepackage{geometry}
 %\geometry{margin=1in} %% 
@@ -18,6 +19,7 @@
 \usepackage{tikz}
 \usetikzlibrary{matrix} % matrices
 \usepackage{tikz-qtree} % Simple trees
+\usepackage{hyperref} % hyperlinks
 % Theorems/etc.
 \newtheorem{pic}{Figure}
 \numberwithin{pic}{section}
@@ -39,6 +41,7 @@
 \newtheorem{rem}{Remark}
 \newtheorem*{cex}{Counterexample}
 \newtheorem*{ts}{T.S.}
+
 
 %%% COMMANDS %%%
 % Sets
@@ -328,10 +331,10 @@ exploit sparsity patterns.
 \indent Suppose $A\in C^{m\times n}$ with bandwidth $2p +1$. Consider the QR-factorization
 of $A$, $A = QR$. Then by Theorem 2.2, we
 know that if $j > i + 2p$, $r_{ij} = 0$. We can alter the well-known
-\textit{Modified Gram-Schmidt} (MGS) algorithm to take advantage of this fact, as seen in
-Algorithm 1.
-\begin{algorithm}
-  \caption{MGS for Banded Matrices}
+\textit{Modified Gram-Schmidt} (MGS) algorithm to take advantage of this fact,
+as shown below.
+\begin{algorithm}[H]
+  \caption{MGS for Banded Matrices [Banded MGS]}
   \begin{algorithmic}[1]
     \For{$i = 1$\textbf{ to }$n$}
     \State$r_{ii}\gets \norm{\mathbf{a_i}}_2$
@@ -345,25 +348,10 @@ Algorithm 1.
   [Note that this is based on the \textit{Modified
     Gram-Schmidt} algorithm as described in \cite{nla}] 
 \end{algorithm}
-\indent Below are some results for the performance of \textbf{MGS for Banded Matrices}
-and the performance of the standard MGS algorithm applied to the same random
-banded matrices.
-\begin{center}
- Performance of \textit{Modified Gram-Schmidt} \textbf{NOT COMPLETE!}
-\begin{tabular}{p{2cm}|p{2cm}p{2cm}p{2cm}p{2cm}p{2cm}p{2cm}p{2cm}}
-    $\C^{10\times 10}$ & 0.0024461 &   0.0023396 &   0.0023416 &   0.0023403  &  0.0023373  &  0.0023707\\
-    $\C^{500\times 500}$& 5.1399053  &  5.0569402   & 5.0526341  &  5.0476353 &   5.0430921  &  5.3553525\\
-   $\C^{750\times 750}$& 12.0286885  & 12.1555834  & 12.3704160  & 12.0967193 &  12.5868144  & 12.2757503\\
-  $\C^{1000\times 1000}$& 21.6673735  & 21.1107465  & 21.1824376  & 21.3300323  & 21.0178360  & 22.8876292 
-\end{tabular}
-\end{center}
-\begin{center}
-  \begin{tabular}{p{1cm}|p{2cm}p{2cm}p{2cm}p{2cm}p{2cm}p{2cm}p{2cm}}
-    & & & & & &
-  \end{tabular}
-\end{center}
+\indent We will examine the performance of \textbf{Algorithm 1} later, but first we will
+examine more specific cases which allow for further optimization.
 \subsection{Special Cases}
-In the special case of the symmetric tridiagonal matrix $A$, where the super and sub diagonal have a distance $k$ from the diagonal, we can improve the \textbf{Algorithm 1} even further using \textbf{Theorem} and \textbf{Corollary}.
+\indent In the special case of the symmetric tridiagonal matrix $A$, where the super and sub diagonal have a distance $k$ from the diagonal, we can improve the \textbf{Algorithm 1} even further using \textbf{Theorem} and \textbf{Corollary}.
 \begin{algorithm}[H]
   \caption{MGS for special tridiagonal Matrices }
   \begin{algorithmic}[1]
@@ -386,12 +374,68 @@ In the special case of the symmetric tridiagonal matrix $A$, where the super and
   \end{algorithmic}
 \end{algorithm}
 \subsection{Flop count}
-Here, we are going to give the theoretical flop count of the two algorithms and compare it with the MGS algorithm in \cite{nla}.\\
-Recall that the MGS requires $\sim 2n^3$ operations, where the most amount of work is due to an inner \textit{for}-loop.
+\indent Here, we are going to give the theoretical flop count of the two algorithms and compare it with the MGS algorithm in \cite{nla}.\\
+\indent Recall that the MGS requires $\sim 2n^3$ operations, where the most amount of work is due to an inner \textit{for}-loop.
 In both of the above algorithms we can eliminate/ heavily reduce the the size of the inner \textit{for}-loop.
-Therefore the first algorithm has a flop count of $\sim 8*2pn^2$ and the second one for the special case tridiagonal matrices we have $\sim 8n^2$ flops.
+Therefore the first algorithm has a flop count of $\sim 8*2pn^2$ and the second
+one for the special case tridiagonal matrices we have $\sim 8n^2$ flops.
+\subsection{Case Study}
+\indent To test the performance of \textbf{Algorithm 1} in a real-world
+computing setting, we wrote version of it in \texttt{Matlab/Octave} and ran it
+on a \textit{Raspberry Pi 3}, timing its performance on random banded matrices versus
+the performance of the MGS algorithm. For actual code and raw data, please see
+the appendix.\\
+\indent Below is a table of ratios 
+\begin{equation*}
+  \Frac{\text{Banded MGS time}}{\text{MGS time}}
+\end{equation*}
+for square random banded matrices of increasing dimensions and bandwidths.
+\begin{center}
+  \begin{tabular}{|| c || c | c | c | c | c | c ||}
+    \hline
+    $m / p$ & $0$ & $\frac{m}{10}$ & $\frac{m}{5}$ & $\frac{3m}{10}$ & $\frac{2m}{5}$ & $\frac{m}{2}$\\
+    \hline\hline
+    10 & 0.243 & 0.577 & 0.799 & 0.952 & 1.040 & 1.055\\
+    \hline
+    500 & 0.006 & 0.365 & 0.644 & 0.844 & 0.961 & 1.006\\
+    \hline
+750 & 0.004 & 0.364 & 0.641 & 0.839 & 0.959 & 1.001\\
+    \hline
+1000 & 0.003 & 0.363 & 0.644 & 0.841 & 0.964 & 1.000\\
+    \hline
+  \end{tabular}
+\end{center}
+\indent These results seem to agree with our intuitive understanding of how
+\textbf{Algorithm 1} provides benefits for banded matrices. It is clear that as
+the bandwidth increases, the run times for Banded MGS and MGS converge, i.e. as
+$p$ gets closer to $m$, we see no real improvement. This agrees with our flop
+count above, since if $p\approx m$, the flop count of \textbf{Algorithm 1} is
+$\sim 8pm^2\approx 8m^3\sim m^3$, which is the performance we expect from the standard
+MGS algorithm. We also can see less speedup for the case where the given matrix
+is in $\R^{10\times 10}$, but this may just be because the effect of optimizations are
+generally more apparent in extreme cases, and a $10\times 10$ matrix is
+certainly not that.
+\indent Below is a plot demonstrating the run times for the Banded
+MGS Algorithm versus the MGS algorithm on random $1000\times 1000$ matrices with
+increasing bandwidth (from the same dataset as the table above).
+\begin{center}
+  \includegraphics[scale=0.4]{pi-data.jpg}
+\end{center}
 \section{Further Study}
-\indent There are several avenues for future work on this topic. Other algorithms, such as Householder triangularization, may be able to take advantage of the properties of banded matrices and address the poor stability of Modified Gram-Schmidt. Our report also never considers memory optimization with the use of a compressed storage format, such as Compressed Sparse Row (CSR) or diagonal form. Finally, further work may investigate the application of banded matrix properties to algorithmic parallelization of Modified Gram-Schmidt and other algorithms.
+\indent There are several avenues for future work on this topic. Other
+algorithms, such as Householder triangularization, may be able to take advantage
+of the properties of banded matrices and address the poor stability of Modified
+Gram-Schmidt. Our report also never considers memory optimization with the use
+of a compressed storage format, such as Compressed Sparse Row (CSR) or diagonal
+form. Finally, further work may investigate the application of banded matrix
+properties to algorithmic parallelization of Modified Gram-Schmidt and other
+algorithms.
+\section*{Appendix}
+All raw data and source code referenced in this paper can be found on
+GitHub at
+\begin{center}
+  \href{https://github.com/drVulter/comp-math-project}{\texttt{https://github.com/drVulter/comp-math-project}}
+\end{center}
 	\addcontentsline{toc}{section}{References}
 	\bibliographystyle{unsrt}
 \bibliography{comp-math}
