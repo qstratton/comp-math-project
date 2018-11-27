@@ -338,6 +338,14 @@ Therefore, the inner product in the computation of the entries $r_{ij}$ is only 
 
     \caption{$k=l=100$ }
 \end{figure} 
+\begin{cor}
+Let the square matrix $A$ have the form as mentioned in the example. 
+Then $R$ of the $QR$ decomposition has the form $r_{ij}\neq 0$ only for the cases $i=j$, $i+k+1$ and $i+2k+2$.
+\end{cor}
+\begin{proof}
+From the ideas of the theorems before, the column vector $q_i$ of $Q$ in the $QR$ decomposition has the form $q_i^*=(\underbrace{0\dots0}_{i\mod k}\,*\,\underbrace{0\dots0}_{k }\,*|\dots|*\,\underbrace{0\dots0}_{k}\,\underbrace{*}_{i-th}\,0\dots0\,*\,0,\dots)$.
+Therefore $r_{ij}= q_i^* a_j=0$ for $i\neq j$ or $i+k+1\neq j$ or $i+2k+2\neq j$.
+\end{proof}
 \section{Algorithms and Results}
 \indent Based on the properties proved in section 2, it is fairly straightforward
 to modify existing algorithms for finding the QR-factorization of a matrix, to
